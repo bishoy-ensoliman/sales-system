@@ -1,0 +1,242 @@
+﻿@model GarasSales.Models.Pricing.PricingViewModel
+@{
+    ViewBag.Title = "AddPricingDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string productGroupNameSelected = "";
+}
+
+<h2> Pricing</h2>
+<h3>Create Project Bill of Quantities & Materials BOQ & BOM</h3>
+@*@Html.BeginForm("AddPricingDetailsPost", "Pricing", FormMethod.Post, new { @class = "my_form" }){
+    }*@
+<form action="/Pricing/AddPricingDetailsPost" method="post">
+    @Html.ActionLink("Clarification Request", "GetClarificationRequest", "Pricing", new { pricingID = Model.PricingCommonData.PricingID }, null)
+    @* <input type="button" value="Clarification Request" onclick="ClarificationRequest(@Model.PricingCommonData.PricingID)" />*@
+    @Html.HiddenFor(x => x.PricingCommonData.PricingID, new { id = "pricingID" })
+    @Html.HiddenFor(x => x.PricingCommonData.UserID)
+    @Html.HiddenFor(x => x.PricingCommonData.BranchID)
+    @Html.HiddenFor(x => x.PricingCommonData.RefID)
+    @if (ViewBag.IsSalesOrPricingManager)
+    {
+        <input type="radio" id="radioValue" checked /><label>Value</label>
+        <input type="radio" id="radioPercentage" /><label>%</label>
+    }
+    <table id="pricingRow" class="pricingProductTable">
+        <tr>
+            <th>
+                Sr
+            </th>
+            <th>
+                Family Type
+            </th>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Attach
+            </th>
+            <th>
+                Bom
+            </th>
+            <th>
+                Price
+            </th>
+            @if (ViewBag.IsSalesOrPricingManager)
+            {
+                <th>
+                    Price Add
+                </th>
+                <th>
+                    Comments
+                </th>
+            }
+            <th>
+                Material Avaibility
+            </th>
+            <th>
+                Price History
+            </th>
+        </tr>
+        @for (int i = 0; i < Model.pricingProductFullDataVMs.Count; i++)
+        {
+            <tr id="pricingRow">
+                <td>
+                    <label class="rowIndex" value="">@(i + 1)</label>
+                    @Html.HiddenFor(x => Model.pricingProductFullDataVMs[i].PricingProductID)
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => Model.pricingProductFullDataVMs[i].ProductGroupID, new SelectList(Model.pricingProductFullDataVMs[i].productGroupVMs, "ProductGroupVMID", "ProductGroupVMName"))
+
+                </td>
+                <td>
+                    @Html.DropDownListFor(x => Model.pricingProductFullDataVMs[i].PricingProductID, new SelectList(Model.pricingProductFullDataVMs[i].productVMs, "ProductVMID", "ProductVMName"))
+
+                </td>
+                <td>
+                    @Html.TextBoxFor(x => Model.pricingProductFullDataVMs[i].Description)
+                </td>
+                <td class="TTYY">
+                    @Html.EditorFor(x => Model.pricingProductFullDataVMs[i].Quantity, new { htmlAttributes = new { onblur = "SetNewTotalRecord(this , 'Quantity')", onfocus = "getOldRecordData(this)" } })
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(Model.pricingProductFullDataVMs[i].FileName))
+                    {
+                        <input type="button" value="@Model.pricingProductFullDataVMs[i].FileName" onclick="DownLoadFile(this)" id="@Model.pricingProductFullDataVMs[i].AttachmentPath" name="pricingProductFullDataVMs[@i].AttachmentPath" />
+                    }
+                    else
+                    {
+                        <input type="file" value="@Model.pricingProductFullDataVMs[i].FileName" id="@Model.pricingProductFullDataVMs[i].FileName" name="pricingProductFullDataVMs[@i].AttachmentPath" />
+                    }
+                </td>
+                <td>
+                    <input type="text" class="bomSelectedLabel" onclick="GetBomData(this,@Model.pricingProductFullDataVMs[i].ProductID)" id="@Model.pricingProductFullDataVMs[i].PricingBOMID" value="@Model.pricingProductFullDataVMs[i].PricingBOMID" name="pricingProductFullDataVMs[@i].PricingBOMID" readonly />
+                </td>
+                <td>
+                    <input type="number" onfocus="getOldRecordData(this)" onblur="SetNewTotalRecord(this,'Bom')" value="@Model.pricingProductFullDataVMs[i].TotalPrice" name="pricingProductFullDataVMs[@i].TotalPrice" />
+                </td>
+                @if (ViewBag.IsSalesOrPricingManager)
+                {
+                    <td>
+                        @if (Model.pricingProductFullDataVMs[i].PricingManagerAddPrice != 0 || Model.pricingProductFullDataVMs[i].SalesManagerAddPrice != 0)
+                        {
+                            <input type="number" onfocus="getOldRecordData(this)" onblur="SetNewTotalRecord(this,'ExtraCost')" class="valueLabel" name="pricingProductFullDataVMs[@i].PricingManagerAddPrice" value="@(Model.pricingProductFullDataVMs[i].PricingManagerAddPrice + Model.pricingProductFullDataVMs[i].SalesManagerAddPrice)" />
+
+                        }
+                        @if (Model.pricingProductFullDataVMs[i].PricingManagerAddPricePercentage != 0 || Model.pricingProductFullDataVMs[i].SalesManagerAddPricePercentage != 0)
+                        {
+                            <input type="number" class="percentageLabel" style="display:none" name="pricingProductFullDataVMs[@i].PricingManagerAddPricePercentage" value="@(Model.pricingProductFullDataVMs[i].PricingManagerAddPricePercentage + Model.pricingProductFullDataVMs[i].SalesManagerAddPricePercentage)" />
+                            <label style="display:none" class="percentageLabel">%</label>
+                        }
+                        else
+                        {
+                            <input type="number" name="pricingProductFullDataVMs[@i].PricingManagerAddPricePercentage" value="0" />
+                        }
+
+                    </td>
+                    <td>
+                        <input type="text" name="pricingProductFullDataVMs[@i].PricingManagerComment" value="@(Model.pricingProductFullDataVMs[i].PricingManagerComment + " | " + Model.pricingProductFullDataVMs[i].SalesManagerComment)" />
+                    </td>
+                }
+                <td>
+                    <input type="text" value="" />
+                </td>
+                <td>
+                    <input type="text" value="" />
+                </td>
+
+            </tr>
+        }
+
+    </table>
+    <div id="bomPopUp">
+
+    </div>
+    <div>
+        <input type="button" onclick="AddNewPricingRow()" value="Add New Product" />
+    </div>
+    <div>
+        <label>Total Quantity</label>
+        <input type="text" id="totalQuantity" name="PricingCommonData.QuantityTotal" value="@Model.PricingCommonData.QuantityTotal" readonly>
+
+        <label>Total Price</label>
+        <input type="text" id="totalPrice" name="PricingCommonData.BOMPriceTotal" value="@Model.PricingCommonData.BOMPriceTotal" readonly>
+
+        @if (ViewBag.IsSalesOrPricingManager)
+        {
+            <label>New Total Price</label>
+            <input type="text" id="newTotalPrice" name="PricingCommonData.ExtraPriceTotal" value="@Model.PricingCommonData.ExtraPriceTotal" readonly>
+        }
+    </div>
+    @for (int i = 0; i < Model.PricingCommonData.pricingExtraCoStLibraryVMs.Count; i++)
+    {
+        <div>
+            @Html.HiddenFor(x => Model.PricingCommonData.pricingExtraCoStLibraryVMs[i].PricingExtraCostID)
+            @Html.HiddenFor(x => Model.PricingCommonData.pricingExtraCoStLibraryVMs[i].PricingExtraCostName)
+            @Html.DisplayFor(x => Model.PricingCommonData.pricingExtraCoStLibraryVMs[i].PricingExtraCostName)
+            @Html.TextBoxFor(x => Model.PricingCommonData.pricingExtraCoStLibraryVMs[i].PricingExtraCostPrice, new { htmlAttributes = new { onblur = "SetNewTotalRecord('this','FinalTotal')", onfocus = "getOldRecordData('this')" } })
+            @Html.DropDownListFor(x => Model.PricingCommonData.pricingExtraCoStLibraryVMs[i].LocalCurrencyID, new SelectList(Model.PricingCommonData.currencyVMs, "CurrencyID", "CurrencyName"))
+
+            @Html.TextBoxFor(x => Model.PricingCommonData.pricingExtraCoStLibraryVMs[i].PricingExtraCostComment)
+        </div>
+    }
+    @for (int i = 0; i < Model.PricingCommonData.extraCostLibraryVMs.Count; i++)
+    {
+        if (Model.PricingCommonData.pricingExtraCoStLibraryVMs.Any(x => x.PricingExtraCostName == Model.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryName))
+        {
+
+        }
+        else
+        {
+            <div>
+                @Html.HiddenFor(x => Model.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryID)
+                @Html.HiddenFor(x => x.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryName)
+                @Html.HiddenFor(x => x.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryType)
+                @Html.DisplayFor(x => Model.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryName)
+                @Html.TextBoxFor(x => Model.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryDefaultPrice, new { onblur = "SetNewTotalRecord('this','FinalTotal')", @onfocus = "getOldRecordData('this')" })
+                @Html.DropDownListFor(x => Model.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryDefaultCurrencyID, new SelectList(Model.PricingCommonData.currencyVMs, "CurrencyID", "CurrencyName"))
+                @Html.TextBoxFor(x => Model.PricingCommonData.extraCostLibraryVMs[i].ExtraCostLibraryComment)
+            </div>
+        }
+    }
+    <div>
+        <label>Final Total</label>
+        <input type="text" id="finalTotal" name="PricingCommonData.Total" value="@Model.PricingCommonData.Total" readonly>
+
+    </div>
+    <h3>Terms & Conditions</h3>
+    @for (int i = 0; i < Model.PricingCommonData.pricingTermVMs.Count; i++)
+    {
+        <div>
+            @Html.HiddenFor(x => Model.PricingCommonData.pricingTermVMs[i].PricingTermID)
+            <input type="checkbox" onclick="OpenTermPragraph(this)" class="checkBtnOfTerms" data-name="oldterm" data-id="@Model.PricingCommonData.pricingTermVMs[i].PricingTermID" />
+            @Html.HiddenFor(x => Model.PricingCommonData.pricingTermVMs[i].PricingTermID)
+            @Html.TextBoxFor(x => Model.PricingCommonData.pricingTermVMs[i].PricingTermName, new { @class = "termPragraph", id = "" + Model.PricingCommonData.pricingTermVMs[i].PricingTermID + "", data_id = "" + Model.PricingCommonData.pricingTermVMs[i].PricingTermID + "", data_name = "oldterm", disabled = "disabled" })
+        </div>
+    }
+    @for (int i = 0; i < Model.PricingCommonData.termsLibraryVMs.Count; i++)
+    {
+        if (Model.PricingCommonData.pricingTermVMs.Any(x => x.PricingTermName == Model.PricingCommonData.termsLibraryVMs[i].TermsLibraryName))
+        {
+
+        }
+        else
+        {
+            <div>
+                <label><input type="checkbox" onclick="OpenTermPragraph(this)" class="checkBtnOfTerms" data-name="Newterm" data-id="@i" /></label>
+                @Html.HiddenFor(x => x.PricingCommonData.termsLibraryVMs[i].TermsLibraryID)
+                @Html.TextBoxFor(x => x.PricingCommonData.termsLibraryVMs[i].TermsLibraryName, new { @class = "termPragraph", id = "" + @Model.PricingCommonData.termsLibraryVMs[i].TermsLibraryID + "", data_id = "" + @i + "", data_name = "Newterm", disabled = "disabled" })
+            </div>
+        }
+    }
+    <div>
+        @if (ViewBag.IsSalesOrPricingManager)
+        {
+            <input type="button" value="Manager button" onclick="ReturnPricingToUnderPricing(@Model.PricingCommonData.PricingID)"/>
+        }
+        <input type="button" value="Review Offer"  />
+        <input type="submit" value="Create & Send Offer" onclick="CollectAddedDataBeforeSubmit()" />
+    </div>
+</form>
+
+<script src="~/Scripts/Pricing/Pricing.js"></script>
+<script>
+    function DownLoadFile(self) {
+        var filePath = $(self).attr("id");
+        $.ajax({
+            url: "/Pricing/Download",
+            type: "get",
+            data: {
+                filePath: filePath
+            },
+            success: function () {
+                window.location = '/Pricing/Download?filePath=' + filePath;
+            }
+        })
+    }
+</script>

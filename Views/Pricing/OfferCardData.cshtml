@@ -1,0 +1,216 @@
+﻿@model  GarasSales.Models.Pricing.OfferCardVM
+@{
+    ViewBag.Title = "OfferCardData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="~/UI/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/UI/CSS/style.css">
+    <title></title>
+</head>
+
+<body>
+    <div class="container mt-5 mb-5">
+        <div class="row upperCard">
+            <div class="col">
+                <div class="outerDiv">
+                    <div class="innerDiv pb-5">
+                        <div class="container">
+                            <h3 class="primaryBlue robotoReg">Offer Data</h3>
+                            <h5 class="primaryBlue robotoMed mt-5">Request For Quotation :</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span class="robotoMed darkBlueColor">Client Name</span>
+                                    <input type="text" class="px-3" value="@Model.v_SalesOffer_Client_FullData.ClientName" readonly/>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="robotoMed darkBlueColor">Project Name</span>
+                                    <input type="text" class="px-3" value="@Model.v_SalesOffer_Client_FullData.ProjectName" readonly/>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="robotoMed darkBlueColor">Project Location</span>
+                                    <input type="text" name="startDate" value="@Model.v_SalesOffer_Client_FullData.ProjectLocation" readonly id="startDate" class="px-3">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span class="robotoMed darkBlueColor">Sales Person</span>
+                                    <input type="text" class="px-3" readonly value="@Model.v_SalesOffer_Client_FullData.FirstName @Model.v_SalesOffer_Client_FullData.MiddleName @Model.v_SalesOffer_Client_FullData.LastName" />
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="robotoMed darkBlueColor">Product Type</span>
+                                    <input type="text" class="px-3" readonly value="@Model.v_SalesOffer_Client_FullData.ProductType" />
+
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="robotoMed darkBlueColor">Contact Person Data:</span>
+                                    <div class="col-md-4">
+                                        <span class="robotoMed darkBlueColor">Contact Name</span>
+                                        <input type="text" class="px-3" readonly value="@Model.v_SalesOffer_Client_FullData.ContactPersonName" />
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="robotoMed darkBlueColor">Contact Mobile</span>
+                                        <input type="text" class="px-3" readonly value="@Model.v_SalesOffer_Client_FullData.ContactPersonMobile" />
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="robotoMed darkBlueColor">Contact Email</span>
+                                        <input type="text" class="px-3" readonly value="@Model.v_SalesOffer_Client_FullData.ContactPersonEmail" />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                @*<div class="col-md-4">
+                                        <span class="robotoMed darkBlueColor">Product</span>
+                                        <div class="dropdown d-inline-block p">
+                                            <a class="btn btn-light dropdown-toggle py-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                               aria-expanded="false">
+                                                <span class="px-5 mx-4"></span>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <a class="dropdown-item" href="#">Action</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                                <a class="dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn mr-3 darkBlue text-white robotoMed">+</button>
+                                    </div>*@
+                                <div class="col-md-4">
+                                    <span class="robotoMed darkBlueColor">START DATE</span>
+                                    
+                                    <input type="text" name="startDate" readonly value="@Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.v_SalesOffer_Client_FullData.StartDate))" id="startDate" class="px-3">
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="robotoMed darkBlueColor">END DATE</span>
+                                    <input type="text" name="startDate" readonly value="@Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.v_SalesOffer_Client_FullData.EndDate))" id="startDate" class="px-3">
+                                </div>
+
+                            </div>
+                            <div class="tabs p-5">
+                                <!-- START TABS EDITED PART  -->
+                                <ul class="tab-links mb-0">
+                                    <li class="active">
+                                        <a id="#tab1">TECHNICAL INFO</a>
+                                    </li>
+                                    <li>
+                                        <a id="#tab2">PROJECT DATA</a>
+                                    </li>
+                                    <li>
+                                        <a id="#tab3">FINANCIAL INFO.</a>
+                                    </li>
+                                    <li>
+                                        <a id="#tab4">General INFO.</a>
+                                    </li>
+                                </ul>
+                                <!-- END TABS EDITED PART  -->
+                                <div class="tab-content">
+                                    <div id="tab1" class="tab active">
+                                        @*<p>Tab #2 content goes here!</p>*@
+                                        <p>
+                                            @Model.v_SalesOffer_Client_FullData.TechnicalInfo
+                                        </p>
+                                    </div>
+
+                                    <div id="tab2" class="tab">
+                                        @*<p>Tab #3 content goes here!</p>*@
+                                        <p>
+                                            @Model.v_SalesOffer_Client_FullData.ProjectData
+                                        </p>
+                                    </div>
+
+                                    <div id="tab3" class="tab">
+                                        @*<p>Tab #4 content goes here!</p>*@
+                                        <p>
+                                            @Model.v_SalesOffer_Client_FullData.FinancialInfo
+                                        </p>
+                                    </div>
+
+                                    <div id="tab4" class="tab">
+                                        @*<p>Tab #4 content goes here!</p>*@
+                                        <p>
+                                            @Model.v_SalesOffer_Client_FullData.Note
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class=" mt-3">
+
+                                    <h5 class="d-inline-block orangeColor">GENERAL NOTES :</h5>
+
+
+                                    <textarea name="text" id="" cols="50" rows="5" placeholder="Write Your Text Here" class=" p-3 w-100"></textarea>
+
+                                </div>*@
+                            <!-- CHANGES START FROM HERE -->
+                            <div>
+                                
+                                @if (!string.IsNullOrEmpty(Model.v_SalesOffer_Client_FullData.FileName))
+                                {
+                                    <button type="button" class="btn mr-1 darkBlueBtn text-white robotoMed p-0">
+                                        <img src="~/UI/Images/paper-clip.png">
+                                    </button>
+                                    <h5 class="d-inline-block mb-2 robotoMed primaryBlue">Attachment </h5>
+                                    <input type="button" value="@Model.v_SalesOffer_Client_FullData.FileName" onclick="DownLoadFile(this)" id="@Model.v_SalesOffer_Client_FullData.AttachmentPath" />
+                                }
+
+                                @*<input type="file" name="fileInput" readonly class="ml-5 d-block" value="@Model.v_SalesOffer_Client_FullData.FileExtenssion">*@
+                            </div>
+                            <div class="d-flex justify-content-end my-3 mr-4">
+                                @if (ViewBag.IsPricingManager == true)
+                                {
+                                    @Html.DropDownList("AllUsersDropDown", (IEnumerable<SelectListItem>)ViewBag.AllUsers, new { id = "AllUsersDropDown", @class = "form-control" })
+                                }
+                                @if (!Model.v_SalesOffer_Client_FullData.Completed)
+                                {
+                                    if (Model.v_SalesOffer_Client_FullData.SalesPersonID > 0)
+                                    {
+                                        <a href='@Url.Action("AddPricingDetails", "Pricing", new { pricingID = ViewBag.pricingID,offerID=ViewBag.offerID})' class="btn text-white save px-5 py-1 robotoBold primaryColorBlue" data-placement="bottom">
+                                            Start Pricing
+                                        </a>
+                                    }
+                                }
+                                @*<button class="btn text-white save px-5 py-1 robotoBold primaryColorBlue">Save</button>*@
+                            </div>
+                            @Html.Hidden("offerIDHidden", (long)ViewBag.offerID)
+
+                            <!-- CHANGES END HERE -->
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/UI/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="~/UI/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/UI/JavaScript/scripts.js"></script>
+    <script src="~/Scripts/Pricing/Pricing.js"></script>
+    <script>
+    function DownLoadFile(self) {
+        var filePath = $(self).attr("id");
+        $.ajax({
+            url: "/Pricing/Download",
+            type: "get",
+            data: {
+                filePath: filePath
+            },
+            success: function () {
+                window.location = '/Pricing/Download?filePath=' + filePath;
+            }
+        })
+    }
+    </script>
+</body>

@@ -1,0 +1,104 @@
+﻿@model GarasSales.Models.Pricing.PricingClearfication_VM
+@{
+    ViewBag.Title = "GetClarificationRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form action="/Pricing/SetPricingClearification" method="post">
+    @for (int i = 0; i < Model.pricingClearficationDatas.Count; i++)
+    {
+        @Html.HiddenFor(x => Model.pricingClearficationDatas[i].PricingClearficationID)
+        <div>
+            <label>From</label>
+            <label>@Model.UserFromName</label>
+        </div>
+
+        <div>
+            <label>Department</label>
+            <label>@Model.UserDepartment</label>
+        </div>
+
+        <div>
+            <label>Subject</label>
+            <label>@Model.pricingClearficationDatas[i].Subject</label>
+        </div>
+
+        <div>
+            <label>To</label>
+            <label>@Model.pricingClearficationDatas[i].UserToName</label>
+        </div>
+
+        <div>
+            <label>Client</label>
+            <label>@Model.Name</label>
+        </div>
+
+        <div>
+            <label>Start Date</label>
+            <label>@Model.StartDate</label>
+        </div>
+
+        <div>
+            <label>Project Name</label>
+            <label>@Model.ProjectName</label>
+        </div>
+        if (!string.IsNullOrEmpty(Model.pricingClearficationDatas[i].Reply))
+        {
+            <div>
+                <label>Reply</label>
+                <label>@Model.pricingClearficationDatas[i].Reply</label>
+            </div>
+        }
+        else
+        {
+            <div>
+                <label>Reply</label>
+                @Html.TextBoxFor(x => Model.pricingClearficationDatas[i].Reply)
+            </div>
+            <div>
+                <label>Attachment</label>
+                <input type="file" name="pricingClearficationDatas[@i].Attachment"/>
+            </div>
+        }
+    }
+    <div>
+        <div>
+            <label>From</label>
+            <label>@Model.UserFromName</label>
+        </div>
+
+        <div>
+            <label>Department</label>
+            <label>@Model.UserDepartment</label>
+        </div>
+        <div>
+            <label>Subject</label>
+            <input type="text" name="NewSubject" value="" />
+        </div>
+        <div>
+            <label>To</label>
+            @Html.DropDownList("AllUsersDropDown", (IEnumerable<SelectListItem>)ViewBag.AllUsers, new { id = "AllUsersDropDown", @class = "form-control" })
+
+        </div>
+        <div>
+            <label>Client</label>
+            <label>@Model.Name</label>
+        </div>
+        <div>
+            <label>Project</label>
+
+            <label>@Model.ProjectName</label>
+
+        </div>
+        <div>
+            <label>Reply</label>
+            <input type="text" name="NewReply" />
+        </div>
+        <div>
+            @Html.HiddenFor(x=>x.pricingClearficationDatas[0].PricingID)
+            <label>Attachment</label>
+            <input type="file" name="NewAttachmentPath" value="" enctype='multipart/form-data'/>
+        </div>
+    </div>
+    <input type="submit" value="Submit" />
+</form>

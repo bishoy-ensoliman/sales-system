@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/UI/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/UI/CSS/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script type="text/javascript" src="~/UI/JavaScript/Sales.js"></script>
+    <script src="/UI/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/UI/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="/UI/JavaScript/scripts.js"></script>
+    @*<asp:ContentPlaceHolder ID="head" runat="server">
+        </asp:ContentPlaceHolder>*@
+    @*@Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")*@
+</head>
+<body>
+    <div id="form1" runat="server">
+        <!-- Navbar -->
+        @*<asp:ScriptManager ID="ScriptManagerMaster" runat="server">
+            </asp:ScriptManager>*@
+
+        <nav class="navbar navbar-expand-lg bg-white">
+            <div class="container-fluid">
+                <span style="font-size: 20px; cursor: pointer" onclick="openNav()">
+                    <img src="/UI/Images/sideMenu.png" alt="">
+                </span>
+                <a class="navbar-brand" href="/Sales/SalesHome.aspx">
+                    <div id="main">
+                        <img src="/UI/Images/logo-icon.png">
+                    </div>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    @*<%--<div class="form-inline my-2 my-lg-0">
+                            <input class="form-control search mr-sm-4 px-5 py-1" type="search">
+                        </div>--%>*@
+                    <asp:UpdatePanel ID="UpdatePanelNotify" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            @*<%--<button style="border: none;background-color: inherit;"
+                                        onclick="btnNotify_Clicked('<%= btnNotification.ClientID %>');">
+                                --%>*@
+                            <div class="dropdown dropleft mr-3">
+                                <asp:Button ID="btnNotification" runat="server" Style="display: none;"
+                                            OnClick="btnNotification_Click" />
+                                <a class="bg-transparent" id="dropdownMenuButton" onclick="btnNotify_Clicked('<%= btnNotification.ClientID %>');">
+
+
+                                    <img src="/UI/Images/envelope.png">
+                                    <div class="circleNotification text-white px-2" id="divnotify" runat="server">
+                                        <small>
+                                            <asp:Label ID="lblNotifyNum" runat="server" Text=""></asp:Label>
+                                        </small>
+                                    </div>
+                                </a>
+                                @*<%--<img id="imgNotify" src="/UI/Images/envelope.png"
+                                             onclick="btnNotify_Clicked('<%= btnNotification.ClientID %>');" class="mr-3" />
+                                    <div class="circleNotification text-white px-2">
+                                        <small>
+                                            <asp:Label ID="lblNotifyNum" runat="server" Text=""></asp:Label>
+                                        </small>
+                                    </div>--%>*@
+
+                                @*<%--
+                                    </button>--%>*@
+                                <div id="notifications" runat="server" class="dropdown-menu">
+                                    @*<%--aria-labelledby="dropdownMenuButton"--%>
+                                        <%--<div id="notifications" runat="server" class="dropdown-content card-4 bar-block" style="width: 300px;">
+                                            --%>*@
+                                    <asp:Repeater ID="rptrNotify" runat="server" OnItemDataBound="rptrNotify_ItemDataBound" OnItemCommand="rptrNotify_ItemCommand">
+                                        <ItemTemplate>
+                                            <asp:HiddenField ID="hdnNotifyID" runat="server" />
+                                            <asp:HiddenField ID="hdnURL" runat="server" />
+                                            <asp:LinkButton ID="btnMarkNotify" runat="server" class="dropdown-item" CommandName="Click" />
+                                        </ItemTemplate>
+                                        @*<%--<SeparatorTemplate>
+                                                <br />
+                                            </SeparatorTemplate>--%>*@
+                                    </asp:Repeater>
+                                    @*<%--<br />--%>*@
+                                    <a class="dropdown-item" href="/Notifications.aspx">show more</a>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    <div>
+                        <asp:Image ID="imgUsr" runat="server" class="userImage mr-3" alt="Avatar" />
+                    </div>
+                    <h5 class="mb-0 mr-5">
+                        <asp:Label ID="lblUsrName" runat="server" />
+                    </h5>
+                </div>
+            </div>
+        </nav>
+
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <div class="sideMenuImg mb-4">
+                <asp:Image ID="imgUsrPhotoSide" runat="server" class="profileImg" alt="Avatar" />
+                <h5 class="mb-0 text-center text-white ">
+                    <asp:Label ID="lblUserNameSide" runat="server" />
+                </h5>
+                <p class="mb-0 text-center yellowColor ">
+                    <strong>
+                        <asp:Label ID="lblJob" runat="server"></asp:Label>
+                    </strong>
+                </p>
+
+            </div>
+
+            <a class="sideItems text-white" href="#">
+                <img src="/UI/Images/icons/dashboard.png">
+                <span>Dashboard </span>
+            </a>
+            <a class="sideItems text-white" href="#">
+                <img src="/UI/Images/icons/calendar.png">
+                <span>Calender </span>
+            </a>
+            <a class="sideItems text-white" href="/Sales/Reports/Reports.aspx">
+                <img src="/UI/Images/icons/announcement.png">
+                <span>Reports </span>
+            </a>
+            <a class="sideItems text-white" href="/Sales/Target/CreateTarget.aspx">
+                <img src="/UI/Images/icons/courses.png">
+                <span>Create Target </span>
+            </a>
+            <a class="sideItems text-white" href="/Sales/Target/TargetDistribution.aspx">
+                <img src="/UI/Images/icons/courses.png">
+                <span>Distribute Target </span>
+            </a>
+            <a class="sideItems text-white" href="/Offers/MonitoringPage.aspx">
+                <img src="/UI/Images/icons/courses.png">
+                <span>Offers </span>
+            </a>
+            <a class="sideItems text-white" href="#">
+                <img src="/UI/Images/icons/msg.png">
+                <span>Messages </span>
+            </a>
+            <a class="sideItems text-white" href="#">
+                <img src="/UI/Images/icons/forum.png">
+                <span>Forum</span>
+            </a>
+            <a class="sideItems text-white pl-4 pb-2" href="/Sales/Client/MyClients.aspx">
+                <img src="/UI/Images/icons/man-user.png" class="mr-1" style="height: 30px; width: 30px">
+                <span class="pl-2">My Clients</span>
+            </a>
+
+
+            <div class="bottomicons d-flex justify-content-between">
+                <asp:Button ID="btnsignOut" runat="server" Text="Sign Out" OnClick="btnsignOut_Click" Style="display: none;"></asp:Button>
+                <a href="#">
+                    <img src="/UI/Images/icons/settings.png">
+                </a>
+                <a href="javascript:btnNotify_Clicked('<%= btnsignOut.ClientID %>');">
+                    <img src="/UI/Images/icons/logout.png">
+                </a>
+            </div>
+        </div>
+
+        <asp:ContentPlaceHolder ID="body" runat="server">
+        </asp:ContentPlaceHolder>
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+        </div>
+    </div>
+    @*@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+
+@*<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>*@

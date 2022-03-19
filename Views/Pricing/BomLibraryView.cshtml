@@ -1,0 +1,95 @@
+﻿@model IEnumerable<GarasSales.Models.Pricing.BOMLibraryVM>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Bom Libraries</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <input type="hidden" id="ProductIDForBomSearch" value="@ViewBag.productID" />
+                    <input type="text" placeholder="Search by Bom name" id="searchBomTextField" onchange="SearchInBomLibraries()"/>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+                                Bom Name
+                            </th>
+                            <th>
+                                Material
+                            </th>
+
+                            <th>
+                                Fab
+                            </th>
+                            <th>
+                                Inst
+                            </th>
+                            <th>
+                                Profit
+                            </th>
+                            <th>
+                                Tax
+                            </th>
+                            <th>
+                                Other
+                            </th>
+                        </tr>
+                        @foreach (var bom in Model)
+                        {
+                        <tr>
+                            @if (bom.BomLibraryVMID == (long)ViewBag.bomIDChoosen)
+                            {
+                                <td>
+                                    <input type="checkbox" checked class="checkBoxesForBom" onclick="setBomLibraryForProduct(this)" id="@bom.BomLibraryVMID" />
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <input type="checkbox" class="checkBoxesForBom" onclick="setBomLibraryForProduct(this)" id="@bom.BomLibraryVMID" />
+                                </td>
+                            }
+                            <td>
+                                <label >@bom.BomLibraryVMName</label>
+                            </td>
+                            <td>
+                                <input type="hidden" class="hiddenBomID" id="@bom.BomLibraryVMID" name="@bom.BomLibraryVMID" />
+                                
+                                <label type="text">@bom.BomLibraryVMMaterialTotal</label>
+                            </td>
+                            <td>
+                                <label type="text">@bom.BomLibraryVMFabricationTotal</label>
+                            </td>
+                            <td>
+                                <label type="text">@bom.BomLibraryVMInstalltionTotal</label>
+                            </td>
+                            <td>
+                                <label type="text">@bom.BomLibraryVMProfitTotal</label>
+                            </td>
+                            <td>
+                                <label type="text">@bom.BomLibraryVMTaxTotal</label>
+                            </td>
+                            <td>
+                                <label type="text">@bom.BomLibraryVMOtherTotal</label>
+                            </td>
+                        </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

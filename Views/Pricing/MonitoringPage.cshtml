@@ -1,0 +1,364 @@
+﻿@model IEnumerable<GarasSales.Models.Pricing.V_PricingFullData_VM>
+@{
+    ViewBag.Title = "MonitoringPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="~/UI/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/UI/css/style.css">
+    @*<script src="~/Scripts/Pricing/Pricing.js"></script>*@
+    <title></title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-white">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <img src="~/UI/Images/envelope.png" class="mr-5">
+            <div class="userImage mr-3"></div>
+            <h5 class="mb-0 mr-5">Bishoy Magdy</h5>
+        </div>
+    </nav>
+
+    <div class="mt-5 mb-5 monitorPage" style="width:95%;margin:0 auto">
+        <div class="row upperCard">
+            <div class="col-lg-12">
+                <div class="outerDiv">
+                    <div class="innerDiv monitor pb-5">
+                        <!-- <div> -->
+                        <div class="d-flex justify-content-between">
+                            <h3 class="robotoMed primaryBlue">Monitoring Page</h3>
+                            <div class="headerTarget mt-4">
+                                <input type="text" ID="tbxFilter" class="greyInput px-3" placeholder="Search" />
+                                <button type="button" name="button" class="btn edit px-4 py-0" onclick="GetFilterData()">
+                                    Filter
+                                    <img src="/UI/Images/exchange.png">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="accordion my-2" id="accordionExample">
+                            <div class="card">
+                                <div class="card-header py-1" id="headingOne">
+
+
+                                    <button class="btn btn-link bg-transparent monitorTab text-white robotoMed"
+                                            type="button" data-toggle="collapse" data-target="#collapseOne"
+                                            aria-expanded="true" aria-controls="collapseOne">
+                                        <div class="d-flex justify-content-between">
+                                            UNDER PRICING
+
+                                        </div>
+
+                                    </button>
+
+                                </div>
+
+                                <div id="collapseOne" class="collapse show paginate monitoring" aria-labelledby="headingOne"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body ">
+                                        <!-- <div class="items" style="width:95%;margin:0 auto"> -->
+
+                                        <div class="d-flex flex-wrap justify-content-start">
+
+                                            <label>New Offer</label>
+                                            @foreach (var newOffer in Model)
+                                            {
+                                                if (newOffer.Active && !newOffer.Completed && newOffer.Status == "Under Pricing" && (newOffer.PricingType == "New Offer" || newOffer.PricingType == "Offer"))
+                                                {
+                                                    @Html.HiddenFor(x => newOffer.Active)
+                                                    @Html.HiddenFor(x => newOffer.SalesPersonID)
+                                                    @Html.HiddenFor(x => newOffer.ProductType)
+                                                    @Html.HiddenFor(x => newOffer.Status)
+                                                    @Html.HiddenFor(x => newOffer.ProjectName)
+                                                    <div class="outerCard m-2">
+                                                        <!-- CHANGES START FROM HERE -->
+                                                        <div class="d-flex justify-content-between px-3">
+                                                            <h6 class="mb-0 py-1 robotoReg text-white">@newOffer.RefID.Value</h6>
+                                                            <h6 class="mb-0 py-1 robotoReg text-white">V @newOffer.VersionNumber</h6>
+                                                        </div>
+                                                        <!-- CHANGES END HERE -->
+                                                        <div class="innerCard p-2">
+                                                            <div class="row">
+
+                                                                <div class="col-md-7">
+                                                                    <h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                        @newOffer.ProjectName
+                                                                    </h6>
+                                                                    <h6 class="robotoReg mb-0 darkBlueColor" style="font-size:0.9rem">
+                                                                        @newOffer.Name
+                                                                    </h6>
+                                                                    @*<h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                            @*<h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                            @newOffer.ClientName
+                                                                        </h6>*@
+
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <img @*src="~/UI/Images/user.jpg"*@ src="@newOffer.Photo" title="@(newOffer.FirstName + " " + newOffer.LastName)" class="my-2">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
+                                                                    <h6 class="mb-0 robotoReg darkBlueColor" style="font-size:0.9rem">
+                                                                        @newOffer.StartDate
+                                                                    </h6>
+                                                                    <h6 class="mb-0 robotoReg darkBlueColor" style="font-size:0.9rem">
+                                                                        @newOffer.EndDate
+                                                                    </h6>
+                                                                </div>
+
+                                                                @*<button type="button" class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft"
+                                                                    data-placement="bottom">*@
+                                                                <a href='@Url.Action("OfferCardData", "Pricing", new { offerId = newOffer.RefID, pricingID = newOffer.PricingID })' class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft" data-placement="bottom">
+                                                                    <img src="~/UI/Images/blueIcon.png" id="@newOffer.RefID" onclick="ViewOfferData(@newOffer.RefID)" class="monitorTabBtn">
+                                                                </a>
+                                                                @*</button>*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            <label>Maintenance</label>
+                                            @foreach (var newOffer in Model)
+                                            {
+                                                if (newOffer.Active && !newOffer.Completed && newOffer.Status == "Under Pricing" && newOffer.PricingType == "Maintenance")
+                                                {
+                                                    @Html.HiddenFor(x => newOffer.Active)
+                                                    @Html.HiddenFor(x => newOffer.SalesPersonID)
+                                                    @Html.HiddenFor(x => newOffer.ProductType)
+                                                    @Html.HiddenFor(x => newOffer.Status)
+                                                    @Html.HiddenFor(x => newOffer.ProjectName)
+                                                    <div class="outerCard m-2">
+                                                        <!-- CHANGES START FROM HERE -->
+                                                        <div class="d-flex justify-content-between px-3">
+                                                            <h6 class="mb-0 py-1 robotoReg text-white">@newOffer.RefID</h6>
+                                                            <h6 class="mb-0 py-1 robotoReg text-white">@newOffer.VersionNumber</h6>
+                                                        </div>
+                                                        <!-- CHANGES END HERE -->
+                                                        <div class="innerCard p-2">
+                                                            <div class="row">
+
+                                                                <div class="col-md-7">
+                                                                    <h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                        @newOffer.ProjectName
+                                                                    </h6>
+                                                                    <h6 class="robotoReg mb-0 darkBlueColor" style="font-size:0.9rem">
+                                                                        @newOffer.Name
+                                                                    </h6>
+                                                                    @*<h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                            @*<h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                            @newOffer.ClientName
+                                                                        </h6>*@
+
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <img @*src="~/UI/Images/user.jpg"*@ src="@newOffer.Photo" title="@(newOffer.FirstName + " " + newOffer.LastName)" class="my-2">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
+                                                                    <h6 class="mb-0 robotoReg darkBlueColor" style="font-size:0.9rem">
+                                                                        @newOffer.StartDate
+                                                                    </h6>
+                                                                    <h6 class="mb-0 robotoReg darkBlueColor" style="font-size:0.9rem">
+                                                                        @newOffer.EndDate
+                                                                    </h6>
+                                                                </div>
+
+                                                                @*<button type="button" class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft"
+                                                                    data-placement="bottom">*@
+                                                                <a href='@Url.Action("OfferCardData", "Pricing", new { offerId = newOffer.RefID,pricingID=newOffer.PricingID})' class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft" data-placement="bottom">
+                                                                    <img src="~/UI/Images/blueIcon.png" id="@newOffer.RefID" onclick="ViewOfferData(@newOffer.RefID)" class="monitorTabBtn">
+                                                                </a>
+                                                                @*</button>*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header py-1" id="headingTwo">
+
+                                    <button class="btn  btn-link bg-transparent monitorTab collapsed text-white robotoMed"
+                                            type="button" data-toggle="collapse" data-target="#collapseTwo"
+                                            aria-expanded="false" aria-controls="collapseTwo">
+                                        <div class="d-flex justify-content-between">
+                                            SENDING OFFER TO CLIENT
+                                            <div class="toggle-icon"></div>
+                                        </div>
+                                    </button>
+
+                                </div>
+                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                    <div class="card-body">
+
+                                        <div class="d-flex flex-wrap justify-content-start">
+
+                                            <label>New Offer</label>
+                                            @foreach (var activeOffer in Model)
+                                                {
+                                                    if (activeOffer.Active && !activeOffer.Completed && (activeOffer.Status == "PendingSalesHeadApprove" || activeOffer.Status == "PendingPricingHeadApprove") && (activeOffer.PricingType == "New Offer" || activeOffer.PricingType == "Offer"))
+                                                    {
+                                                    <div class="outerCard redOuter m-2">
+                                                        <h6 class="mb-0 py-1 robotoReg text-right mr-3 text-white">@activeOffer.RefID</h6>
+                                                        <div class="innerCard p-2">
+                                                            <div class="row">
+                                                                <div class="col-md-7">
+                                                                    <h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                        @activeOffer.ProjectName
+                                                                    </h6>
+                                                                    <h6 class="robotoReg mb-0 darkBlueColor" style="font-size:0.9rem">
+                                                                        @activeOffer.Name
+                                                                    </h6>
+                                                                    @*<h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                            @activeOffer.ClientName
+                                                                        </h6>*@
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <img src="@activeOffer.Photo" title="@(activeOffer.FirstName + " " + activeOffer.LastName)" class="my-2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
+                                                                    <img src="~/UI/Images/pdf.png" class="document mr-4">
+                                                                </div>
+                                                                @*<button type="button" class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft"
+                                                                    data-placement="bottom">*@
+                                                                <a href='@Url.Action("OfferCardData", "Pricing", new { offerId = activeOffer.RefID, pricingID = activeOffer.PricingID })' class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft" data-placement="bottom">
+                                                                    <img src="~/UI/Images/blueIcon.png" id="@activeOffer.RefID" onclick="ViewOfferData(@activeOffer.RefID)" class="monitorTabBtn">
+                                                                </a>
+                                                                @*</button>*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            <label>Maintenance</label>
+                                            @foreach (var activeOffer in Model)
+                                            {
+                                                if (activeOffer.Active && !activeOffer.Completed && activeOffer.Status == "Pending Approve" && activeOffer.PricingType == "Maintenance")
+                                                {
+                                                    <div class="outerCard redOuter m-2">
+                                                        <h6 class="mb-0 py-1 robotoReg text-right mr-3 text-white">@activeOffer.RefID</h6>
+                                                        <div class="innerCard p-2">
+                                                            <div class="row">
+                                                                <div class="col-md-7">
+                                                                    <h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                        @activeOffer.ProjectName
+                                                                    </h6>
+                                                                    <h6 class="robotoReg mb-0 darkBlueColor" style="font-size:0.9rem">
+                                                                        @activeOffer.Name
+                                                                    </h6>
+                                                                    @*<h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                            @activeOffer.ClientName
+                                                                        </h6>*@
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <img src="@activeOffer.Photo" title="@(activeOffer.FirstName + " " + activeOffer.LastName)" class="my-2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
+                                                                    <img src="~/UI/Images/pdf.png" class="document mr-4">
+                                                                </div>
+                                                                @*<button type="button" class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft"
+                                                                    data-placement="bottom">*@
+                                                                <a href='@Url.Action("OfferCardData", "Pricing", new { offerId = activeOffer.RefID,pricingID=activeOffer.PricingID})' class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft" data-placement="bottom">
+                                                                    <img src="~/UI/Images/blueIcon.png" id="@activeOffer.RefID" onclick="ViewOfferData(@activeOffer.RefID)" class="monitorTabBtn">
+                                                                </a>
+                                                                @*</button>*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header py-1" id="headingFour">
+
+                                    <button class="btn btn-link bg-transparent monitorTab collapsed text-white robotoMed"
+                                            type="button" data-toggle="collapse" data-target="#collapseFour"
+                                            aria-expanded="false" aria-controls="collapseThree">
+                                        <div class="d-flex justify-content-between">
+                                            CLOSED
+                                            <div class="toggle-icon"></div>
+                                        </div>
+                                    </button>
+
+                                </div>
+                                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap justify-content-start">
+                                            @foreach (var completedOffer in Model)
+                                            {
+                                                if (completedOffer.Completed)
+                                                {
+                                                    <div class="outerCard redOuter m-2">
+                                                        <h6 class="mb-0 py-1 robotoReg text-right mr-3 text-white">@completedOffer.RefID</h6>
+                                                        <div class="innerCard p-2">
+                                                            <div class="row">
+                                                                <div class="col-md-7">
+                                                                    <h6 class="robotoReg mb-0 primaryBlue" style="font-size:0.9rem">
+                                                                        @completedOffer.ProjectName
+                                                                    </h6>
+                                                                    <h6 class="robotoReg mb-0 darkBlueColor" style="font-size:0.9rem">
+                                                                        @completedOffer.Name
+                                                                    </h6>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <img src="@completedOffer.Photo" title="@(completedOffer.FirstName + " " + completedOffer.LastName)" class="my-2">
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
+                                                                    <img src="~/UI/Images/pdf.png" class="document mr-4">
+                                                                </div>
+                                                                @*<button type="button" class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft"
+                                                                    data-placement="bottom">*@
+                                                                <a href='@Url.Action("OfferCardData", "Pricing", new { offerId = completedOffer.RefID,pricingID=completedOffer.PricingID})' class="btn bg-transparent pl-0 pb-0 monitorBtn pr-0 topLeft" data-placement="bottom">
+                                                                    <img src="~/UI/Images/blueIcon.png" id="@completedOffer.RefID" onclick="ViewOfferData(@completedOffer.RefID)" class="monitorTabBtn">
+                                                                </a>
+                                                                @*</button>*@
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="node_modules/bootpag/lib/jquery.bootpag.js"></script> -->
+    <script src="~/UI/node_modules/jquery/dist/jquery.min.js"></script>
+    @*<script src="dist/js/paginga.jquery.js"></script>*@
+    <script src="~/UI/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    @*<script src="~/dist/js/scripts.js"></script>*@
+    <script src="~/UI/JavaScript/scripts.js"></script>
+    <script src="~/UI/JavaScript/paginate.js"></script>
+    <script src="~/Scripts/Pricing/Pricing.js"></script>
+</body>
+
